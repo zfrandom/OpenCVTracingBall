@@ -4,3 +4,4 @@ This is a game that simulates ball collision with the existence of friction and 
 Reference:
 http://www.pyimagesearch.com/2015/09/14/ball-tracking-with-opencv/
 http://www.pyimagesearch.com/2014/08/04/opencv-python-color-detection/
+http://www.petercollingridge.co.uk/book/export/html/6
