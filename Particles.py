@@ -1,4 +1,4 @@
-import pygame
+#import pygame
 import random
 import math
 import cv2
@@ -69,7 +69,7 @@ class star(Particle):
 		self.angle = math.atan2(dy, dx)
 		diff = math.hypot(dx, dy)
 		self.t = cv2.getTickCount()
-		self.speed = diff/((self.pt - self.t)/cv2.getTickFrequency())
+		self.speed = diff/((self.pt - self.t)*2 /(cv2.getTickFrequency()))
 	def collide(self, p):
 		super(star, self).collide(p, 0.3)
 

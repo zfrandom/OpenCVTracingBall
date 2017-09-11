@@ -2,15 +2,18 @@ import cv2
 import numpy as np
 import Particles
 
+def call_back(value):
+    pass
 
 cap = cv2.VideoCapture(0)
 width = 600
 height = 460
+base = 10
 a = Particles.star(width, height)
 env = Particles.Environment(width, height)
 env.addParticles(2)
-cap.set(cv2.cv.CV_CAP_PROP_FRAME_WIDTH,width);
-cap.set(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT,height);
+cap.set(cv2.CAP_PROP_FRAME_WIDTH,width);
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT,height);
 while(1):
 
     # Take each frame
@@ -18,9 +21,22 @@ while(1):
     frame = cv2.flip(frame1,1)
     # Convert BGR to HSV
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    cv2.createTrackbar("RED", "frame",100,255, call_back)
+    cv2.createTrackbar("GREEN", "frame",100,255, call_back)
+    cv2.createTrackbar("BLUE", "frame",100,255, call_back)
+    
     # define range of blue color in HSV
-    lower_blue = np.array([110,50,50])
-    upper_blue = np.array([130,255,255])
+    B = cv2.getTrackbarPos("BLUE", "frame")
+    G = cv2.getTrackbarPos("GREEN", "frame")
+    R = cv2.getTrackbarPos("RED", "frame")
+    h = cv2.cvtColor(np.uint8([[[B, G, R]]]), cv2.COLOR_BGR2HSV)
+    #bgr=np.array((int(bgr[0][0][0]),int(bgr[0][0][1]), int(bgr[0][0][2])))
+    cv2.circle(frame, (20,20), 20, (B,G,R), -1)
+    lower_blue = np.array([h[0][0][0]-10 ,100,100])
+    upper_blue = np.array([h[0][0][0]+10,255,255])
+    # lower_blue = np.array([h-10,100,100])
+    # upper_blue = np.array([h+10,255,255])
 
     # Threshold the HSV image to get only blue colors
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
@@ -48,7 +64,7 @@ while(1):
         if radius > 20:
             # draw the circle and centroid on the frame,
             # then update the list of tracked points
-            a.refresh(x,y,radius)
+            a.refresh(base * round(x/base),base * round(y/base),radius)
             env.update()
             for p in env.particles:
                 a.collide(p)
